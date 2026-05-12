@@ -1,0 +1,21 @@
+{
+  "name": "Philly Sports Dashboard",
+  "short_name": "PhiSports",
+  "start_url": "./phisports.html",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#004C54",
+  "description": "Dashboard for Eagles and Phillies games, plus local weather.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
