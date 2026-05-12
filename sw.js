@@ -1,4 +1,4 @@
-const CACHE_NAME = 'phisports-cache-v1';
+const CACHE_NAME = 'phisports-cache-v2';
 const urlsToCache = [
   './index.html',
   './manifest.json'
