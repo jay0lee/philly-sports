@@ -1,7 +1,7 @@
 {
   "name": "Philly Sports Dashboard",
   "short_name": "PhiSports",
-  "start_url": "./phisports.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#004C54",
