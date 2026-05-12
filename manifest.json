@@ -4,6 +4,7 @@
   "start_url": "/philly-sports/",
   "scope": "/philly-sports/",
   "display": "standalone",
+  "orientation": "landscape",
   "background_color": "#121212",
   "theme_color": "#004C54",
   "description": "Dashboard for Eagles and Phillies games, plus local weather.",
