@@ -1,7 +1,8 @@
 {
   "name": "Philly Sports Dashboard",
   "short_name": "PhiSports",
-  "start_url": "./index.html",
+  "start_url": "/philly-sports/",
+  "scope": "/philly-sports/",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#004C54",
