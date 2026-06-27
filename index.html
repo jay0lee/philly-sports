@@ -139,6 +139,17 @@
             box-sizing: border-box; /* Keeps padding inside the defined width */
         }
 
+        .side-panel-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+        
+        .side-panel-group:last-child {
+            margin-bottom: 0;
+        }
+
         /* THE FIX: Maximized Time and Temp */
         #time {
             font-size: 6.5rem; /* Significantly larger */
@@ -149,7 +160,7 @@
         #date {
             font-size: 1.5rem;
             color: #aaa;
-            margin-bottom: 60px; /* Separates the clock from the weather */
+            margin-top: 10px;
             text-align: center;
         }
 
@@ -163,7 +174,83 @@
         #temp-label {
             font-size: 1.3rem;
             color: #aaa;
-            margin-top: 5px;
+            margin-top: 10px;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 900px), (orientation: portrait) {
+            body, html {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+            }
+            .container {
+                flex-direction: column-reverse;
+                height: auto;
+                min-height: 100vh;
+            }
+            .side-panel {
+                width: 100%;
+                border-left: none;
+                border-bottom: 4px solid #000;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 15px 10px;
+            }
+            .side-panel-group {
+                margin-bottom: 0;
+            }
+            #time { font-size: 4rem; }
+            #date { font-size: 1.2rem; margin-top: 5px; }
+            #temp { font-size: 3.5rem; }
+            #temp-label { font-size: 1.1rem; margin-top: 5px; }
+
+            .sports-panel {
+                padding: 15px;
+                gap: 20px;
+                justify-content: flex-start;
+            }
+            .game-status {
+                width: 100%;
+                padding: 15px;
+            }
+            .team-info {
+                font-size: 1.6rem;
+                width: auto;
+                flex: 1;
+            }
+            .score-text {
+                font-size: 1.8rem;
+                min-width: 80px;
+            }
+            .small-logo {
+                width: 45px;
+                height: 45px;
+            }
+            .matchup {
+                gap: 5px;
+            }
+            .tv-network {
+                font-size: 1rem !important;
+                margin-top: 5px !important;
+            }
+            .game-time {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #time { font-size: 3rem; }
+            #temp { font-size: 2.5rem; }
+            .team-info { font-size: 1.3rem; }
+            .score-text { font-size: 1.5rem; min-width: 60px; }
+            .small-logo { width: 35px; height: 35px; }
+            .team-info.away, .team-info.home {
+                gap: 6px;
+            }
+            .game-time {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -183,10 +270,14 @@
     </div>
 
     <div class="side-panel">
-        <div id="time">--:--</div>
-        <div id="date">--</div>
-        <div id="temp">--°F</div>
-        <div id="temp-label">Plainsboro, NJ</div>
+        <div class="side-panel-group">
+            <div id="time">--:--</div>
+            <div id="date">--</div>
+        </div>
+        <div class="side-panel-group">
+            <div id="temp">--°F</div>
+            <div id="temp-label">Plainsboro, NJ</div>
+        </div>
     </div>
 </div>
 
