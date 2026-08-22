@@ -1,534 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Philly Sports Dashboard</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#121212">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <style>
-        :root {
-            --eagles-green: #004C54;
-            --phillies-blue: #002D72; 
-            --bg-color: #121212;
-            --text-color: #ffffff;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#004c97">
+  <title>Philly Sports Clock</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            overflow: hidden;
-            display: flex;
-        }
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #0b1e36;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #ffffff;
+      user-select: none;
+      -webkit-user-select: none;
+    }
 
-        /* Layout Grid */
-        .container {
-            display: flex;
-            width: 100%;
-            height: 100%;
-        }
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+      padding: 6px 12px;
+      justify-content: space-between;
+    }
 
-        /* Main Sports Panel */
-        .sports-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 30px; 
-            padding: 20px;
-            text-align: center;
-            transition: background-color 0.5s ease;
-            box-sizing: border-box;
-        }
+    /* Top Bar: Clock & Weather */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex: 0 0 auto;
+      padding: 0 4px;
+    }
 
-        .game-status {
-            background: rgba(0,0,0,0.4);
-            padding: 20px;
-            border-radius: 15px;
-            width: 95%;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-            box-sizing: border-box;
-        }
+    .time-section {
+      display: flex;
+      flex-direction: column;
+    }
 
-        .game-status strong {
-            display: block;
-            font-size: 1.3rem;
-            color: #ccc;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-        }
+    .time-display {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
 
-        /* Matchup Row Flexbox */
-        .matchup {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
+    .date-display {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #a0c4e8;
+      margin-top: 2px;
+    }
 
-        .team-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 2.2rem;
-            font-weight: bold;
-            width: 160px; 
-        }
+    .weather-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
 
-        .team-info.away {
-            justify-content: flex-end;
-        }
+    .temp-display {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
 
-        .team-info.home {
-            justify-content: flex-start;
-        }
+    .location-display {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #a0c4e8;
+      margin-top: 2px;
+    }
 
-        .small-logo {
-            width: 65px;
-            height: 65px;
-            object-fit: contain;
-            background: rgba(255, 255, 255, 0.8); 
-            border-radius: 50%;
-            padding: 4px;
-        }
+    /* Main Cards Area */
+    .cards-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      gap: 6px;
+      margin-top: 6px;
+      min-height: 0;
+    }
 
-        /* THE FIX: Prevents the score from wrapping */
-        .score-text {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #fff;
-            min-width: 120px;
-            white-space: nowrap; /* Forces text to stay on one line */
-        }
-        
-        .game-time {
-            font-size: 1.4rem;
-            color: #e0e0e0;
-            margin-top: 5px;
-        }
+    .card {
+      background-color: #005aa7;
+      border-radius: 8px;
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      flex: 1 1 0;
+      min-height: 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
 
-        .tv-network {
-            color: #ffcc00 !important;
-            font-weight: bold;
-            font-size: 1.2rem !important;
-            margin-top: 8px !important;
-            display: block;
-        }
+    .card-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      text-align: center;
+      color: #d0e4ff;
+    }
 
-        /* Sidebar for Time/Weather */
-        .side-panel {
-            width: 300px; /* Increased to allow for larger text */
-            background-color: #1e1e1e;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-left: 4px solid #000;
-            padding: 20px;
-            box-sizing: border-box; /* Keeps padding inside the defined width */
-        }
+    .matchup-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
 
-        .side-panel-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 60px;
-        }
-        
-        .side-panel-group:last-child {
-            margin-bottom: 0;
-        }
+    .team-code {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      width: 44px;
+      text-align: center;
+    }
 
-        /* THE FIX: Maximized Time and Temp */
-        #time {
-            font-size: 6.5rem; /* Significantly larger */
-            font-weight: bold;
-            line-height: 1; /* Prevents awkward spacing above/below */
-        }
+    .team-logo {
+      width: 32px;
+      height: 32px;
+      background: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+    }
 
-        #date {
-            font-size: 1.5rem;
-            color: #aaa;
-            margin-top: 10px;
-            text-align: center;
-        }
+    .team-logo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
 
-        #temp {
-            font-size: 6rem; /* Significantly larger */
-            font-weight: bold;
-            color: #4da6ff;
-            line-height: 1;
-        }
-        
-        #temp-label {
-            font-size: 1.3rem;
-            color: #aaa;
-            margin-top: 10px;
-        }
+    .score-or-vs {
+      font-size: 1.2rem;
+      font-weight: 800;
+      padding: 0 4px;
+      min-width: 50px;
+      text-align: center;
+    }
 
-        /* --- Responsive Adjustments --- */
-        @media (max-width: 900px), (orientation: portrait) {
-            body, html {
-                height: auto;
-                min-height: 100vh;
-                overflow-y: auto;
-            }
-            .container {
-                flex-direction: column-reverse;
-                height: auto;
-                min-height: 100vh;
-            }
-            .side-panel {
-                width: 100%;
-                border-left: none;
-                border-bottom: 4px solid #000;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 15px 10px;
-            }
-            .side-panel-group {
-                margin-bottom: 0;
-            }
-            #time { font-size: 4rem; }
-            #date { font-size: 1.2rem; margin-top: 5px; }
-            #temp { font-size: 3.5rem; }
-            #temp-label { font-size: 1.1rem; margin-top: 5px; }
+    .game-details {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #e0eaff;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-            .sports-panel {
-                padding: 15px;
-                gap: 20px;
-                justify-content: flex-start;
-            }
-            .game-status {
-                width: 100%;
-                padding: 15px;
-            }
-            .team-info {
-                font-size: 1.6rem;
-                width: auto;
-                flex: 1;
-            }
-            .score-text {
-                font-size: 1.8rem;
-                min-width: 80px;
-            }
-            .small-logo {
-                width: 45px;
-                height: 45px;
-            }
-            .matchup {
-                gap: 5px;
-            }
-            .tv-network {
-                font-size: 1rem !important;
-                margin-top: 5px !important;
-            }
-            .game-time {
-                font-size: 1.1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            #time { font-size: 3rem; }
-            #temp { font-size: 2.5rem; }
-            .team-info { font-size: 1.3rem; }
-            .score-text { font-size: 1.5rem; min-width: 60px; }
-            .small-logo { width: 35px; height: 35px; }
-            .team-info.away, .team-info.home {
-                gap: 6px;
-            }
-            .game-time {
-                font-size: 1rem;
-            }
-        }
-    </style>
+    .broadcast-info {
+      text-align: center;
+      font-size: 0.65rem;
+      color: #c0d8f8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
 </head>
 <body>
+  <div class="app-container">
+    <!-- Header: Clock & Weather -->
+    <header class="header">
+      <div class="time-section">
+        <div class="time-display" id="clock">--:--</div>
+        <div class="date-display" id="date">---, --- --</div>
+      </div>
+      <div class="weather-section">
+        <div class="temp-display" id="temp">--°</div>
+        <div class="location-display" id="location">Plainsboro, NJ</div>
+      </div>
+    </header>
 
-<div class="container">
-    <div class="sports-panel" id="sports-panel">
-        <div class="game-status" id="last-game">
-            <strong>Most Recent Game</strong>
-            <div id="last-game-details">Fetching data...</div>
+    <!-- Game Status Cards -->
+    <main class="cards-container">
+      <!-- Most Recent Game Card -->
+      <section class="card" id="recent-game-card">
+        <div class="card-label">Most Recent Game</div>
+        <div class="matchup-row">
+          <span class="team-code" id="recent-away-abbr">STL</span>
+          <div class="team-logo">
+            <img id="recent-away-logo" src="" alt="Away">
+          </div>
+          <span class="score-or-vs" id="recent-score">6 - 7</span>
+          <div class="team-logo">
+            <img id="recent-home-logo" src="" alt="Home">
+          </div>
+          <span class="team-code" id="recent-home-abbr">PHI</span>
         </div>
-        
-        <div class="game-status" id="next-game">
-            <strong>Next Upcoming Game</strong>
-            <div id="next-game-details">Fetching data...</div>
+        <div class="game-details" id="recent-game-status">Final • Fri, Aug 21</div>
+      </section>
+
+      <!-- Next Upcoming Game Card -->
+      <section class="card" id="upcoming-game-card">
+        <div class="card-label">Next Upcoming Game</div>
+        <div class="matchup-row">
+          <span class="team-code" id="next-away-abbr">STL</span>
+          <div class="team-logo">
+            <img id="next-away-logo" src="" alt="Away">
+          </div>
+          <span class="score-or-vs">@</span>
+          <div class="team-logo">
+            <img id="next-home-logo" src="" alt="Home">
+          </div>
+          <span class="team-code" id="next-home-abbr">PHI</span>
         </div>
-    </div>
+        <div class="game-details" id="next-game-time">Sat, Aug 22, 6:05 PM</div>
+        <div class="broadcast-info" id="next-game-broadcast">📺 Watch on: MLB.TV, NBCSP</div>
+      </section>
+    </main>
+  </div>
 
-    <div class="side-panel">
-        <div class="side-panel-group">
-            <div id="time">--:--</div>
-            <div id="date">--</div>
-        </div>
-        <div class="side-panel-group">
-            <div id="temp">--°F</div>
-            <div id="temp-label">Plainsboro, NJ</div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // --- Configuration ---
-    const LAT = 40.3337;
-    const LON = -74.5849;
-   
-    // Add any networks you want to hide here (keep them lowercase for easy matching)
-    const BLOCKED_NETWORKS = [
-        'rockies.tv',
-	'nbc sports phil +',
-        'nbc sports phil',
-	'nbcsp+',
-        'nbc sports philadelphia'
-    ];
-
-    const TEAMS = {
-        eagles: {
-            api: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/phi/schedule',
-            color: 'var(--eagles-green)'
-        },
-        phillies: {
-            api: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/phi/schedule',
-            color: 'var(--phillies-blue)' 
-        }
-    };
-
-    // --- Clock & Date Logic ---
+  <script>
+    // Clock Updater
     function updateClock() {
-        const now = new Date();
-        let hours = now.getHours();
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        hours = hours % 12 || 12; 
-        
-        document.getElementById('time').innerText = `${hours}:${minutes}`;
-        document.getElementById('date').innerText = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      hours = hours % 12 || 12;
+
+      document.getElementById('clock').textContent = `${hours}:${minutes}`;
+
+      const options = { weekday: 'short', month: 'short', day: 'numeric' };
+      document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
     }
+
     setInterval(updateClock, 1000);
     updateClock();
 
-    // --- Weather Logic ---
-    async function fetchWeather() {
-        try {
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current_weather=true&temperature_unit=fahrenheit`;
-            const response = await fetch(url);
-            const data = await response.json();
-            document.getElementById('temp').innerText = `${Math.round(data.current_weather.temperature)}°F`;
-        } catch (error) {
-            console.error("Weather fetch failed", error);
-        }
-    }
-    fetchWeather();
-    setInterval(fetchWeather, 900000); 
-
-    // --- Sports Logic ---
-    async function fetchSchedule(baseUrl) {
-        try {
-            const [regResponse, postResponse] = await Promise.all([
-                fetch(`${baseUrl}?seasontype=2`),
-                fetch(`${baseUrl}?seasontype=3`)
-            ]);
-            
-            const regData = await regResponse.json();
-            const postData = await postResponse.json();
-            
-            return [...(regData.events || []), ...(postData.events || [])];
-        } catch (error) {
-            return [];
-        }
-    }
-
-    async function fetchPreviousSeasonLastGame(baseUrl) {
-        const lastYear = new Date().getFullYear() - 1;
-        try {
-            const [regResponse, postResponse] = await Promise.all([
-                fetch(`${baseUrl}?season=${lastYear}&seasontype=2`),
-                fetch(`${baseUrl}?season=${lastYear}&seasontype=3`)
-            ]);
-            
-            const allEvents = [...(await regResponse.json()).events || [], ...(await postResponse.json()).events || []];
-            
-            let lastCompletedGame = null;
-            for (let event of allEvents) {
-                if (event.competitions[0].status.type.state === 'post') {
-                    lastCompletedGame = event; 
-                }
-            }
-            return lastCompletedGame;
-        } catch (error) {
-            return null;
-        }
-    }
-
-    function parseGames(events) {
-        let lastGame = null;
-        let nextGame = null;
-
-        for (let event of events) {
-            const status = event.competitions[0].status.type.state; 
-            
-            if (status === 'post') {
-                lastGame = event; 
-            } else if ((status === 'pre' || status === 'in') && !nextGame) {
-                nextGame = event; 
-            }
-        }
-        return { lastGame, nextGame };
-    }
-
-    // --- Dynamic Matchup HTML Builder ---
-    function buildMatchupHTML(event, isPast) {
-        if (!event) return "<div class='game-time'>No game data available</div>";
-        
-        try {
-            const comp = event.competitions[0];
-            
-            const awayTeam = comp.competitors.find(c => c.homeAway === 'away') || comp.competitors[1];
-            const homeTeam = comp.competitors.find(c => c.homeAway === 'home') || comp.competitors[0];
-
-            const awayLogo = awayTeam.team.logo || (awayTeam.team.logos && awayTeam.team.logos.length > 0 ? awayTeam.team.logos[0].href : '');
-            const awayAbbr = awayTeam.team.abbreviation || 'TBD';
-            const awayScore = (awayTeam.score && awayTeam.score.displayValue) ? awayTeam.score.displayValue : "0";
-
-            const homeLogo = homeTeam.team.logo || (homeTeam.team.logos && homeTeam.team.logos.length > 0 ? homeTeam.team.logos[0].href : '');
-            const homeAbbr = homeTeam.team.abbreviation || 'TBD';
-            const homeScore = (homeTeam.score && homeTeam.score.displayValue) ? homeTeam.score.displayValue : "0";
-
-            let centerScoreArea = isPast ? `${awayScore} - ${homeScore}` : `@`;
-
-            let html = `
-                <div class="matchup">
-                    <div class="team-info away">
-                        <span>${awayAbbr}</span>
-                        <img src="${awayLogo}" class="small-logo" onerror="this.style.display='none'">
-                    </div>
-                    <div class="score-text">${centerScoreArea}</div>
-                    <div class="team-info home">
-                        <img src="${homeLogo}" class="small-logo" onerror="this.style.display='none'">
-                        <span>${homeAbbr}</span>
-                    </div>
-                </div>
-            `;
-
-            const date = new Date(event.date).toLocaleString('en-US', {
-                weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
-            });
-
-            if (isPast) {
-                html += `<div class="game-time">Final • ${date}</div>`;
-            } else {
-                html += `<div class="game-time">${date}</div>`;
-		let network = "TBD";
-                if (comp.broadcasts && comp.broadcasts.length > 0) {
-                    const allNetworks = comp.broadcasts.map(broadcast => {
-                        return broadcast.media?.shortName || broadcast.names?.[0];
-                });
-
-                // Filter out empties AND check against the blocklist
-                const validNetworks = allNetworks.filter(net => {
-                if (!net) return false;
-                    // Convert to lowercase to ensure it catches it regardless of how ESPN capitalizes it
-                    return !BLOCKED_NETWORKS.includes(net.toLowerCase());
-                });
-
-               if (validNetworks.length > 0) {
-                   network = validNetworks.join(', ');
-               } else {
-                   network = "No available broadcast"; // Fallback if everything is blocked
-               }
-           }
-           html += `<div class="tv-network">📺 Watch on: ${network}</div>`;
-            }
-
-            return html;
-        } catch (e) {
-            console.error("HTML Build Error:", e);
-            return "<div class='game-time'>Error loading game details</div>";
-        }
-    }
-
-    // --- Helpers to find the absolute most recent/upcoming games ---
-    function getMostRecent(game1, game2) {
-        if (!game1) return game2;
-        if (!game2) return game1;
-        return new Date(game1.date) > new Date(game2.date) ? game1 : game2;
-    }
-
-    function getNextUpcoming(game1, game2) {
-        if (!game1) return game2;
-        if (!game2) return game1;
-        return new Date(game1.date) < new Date(game2.date) ? game1 : game2;
-    }
-
-    async function updateSportsDashboard() {
-        const eaglesEvents = await fetchSchedule(TEAMS.eagles.api);
-        const philliesEvents = await fetchSchedule(TEAMS.phillies.api);
-
-        const eaglesGames = parseGames(eaglesEvents);
-        const philliesGames = parseGames(philliesEvents);
-
-        if (!eaglesGames.lastGame) eaglesGames.lastGame = await fetchPreviousSeasonLastGame(TEAMS.eagles.api);
-        if (!philliesGames.lastGame) philliesGames.lastGame = await fetchPreviousSeasonLastGame(TEAMS.phillies.api);
-
-        if (eaglesGames.lastGame) eaglesGames.lastGame._themeColor = TEAMS.eagles.color;
-        if (philliesGames.lastGame) philliesGames.lastGame._themeColor = TEAMS.phillies.color;
-        if (eaglesGames.nextGame) eaglesGames.nextGame._themeColor = TEAMS.eagles.color;
-        if (philliesGames.nextGame) philliesGames.nextGame._themeColor = TEAMS.phillies.color;
-
-        const absoluteLastGame = getMostRecent(eaglesGames.lastGame, philliesGames.lastGame);
-        const absoluteNextGame = getNextUpcoming(eaglesGames.nextGame, philliesGames.nextGame);
-
-        let boardColor = '#121212';
-        if (absoluteNextGame && absoluteNextGame._themeColor) {
-            boardColor = absoluteNextGame._themeColor;
-        } else if (absoluteLastGame && absoluteLastGame._themeColor) {
-            boardColor = absoluteLastGame._themeColor;
-        }
-
-        document.getElementById('sports-panel').style.backgroundColor = boardColor;
-
-        document.getElementById('last-game-details').innerHTML = buildMatchupHTML(absoluteLastGame, true);
-        document.getElementById('next-game-details').innerHTML = buildMatchupHTML(absoluteNextGame, false);
-    }
-
-    updateSportsDashboard();
-    setInterval(updateSportsDashboard, 900000); 
-
-    // --- Daily Memory Flush (3:00 AM Hard Refresh) ---
-    function scheduleRefresh() {
-        const now = new Date();
-        const refreshTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 3, 0, 0, 0); 
-        if (now > refreshTime) refreshTime.setDate(refreshTime.getDate() + 1);
-        setTimeout(() => window.location.reload(true), refreshTime - now);
-    }
-    scheduleRefresh();
-</script>
-
-<script>
-    // --- PWA Service Worker Registration ---
+    // Register Service Worker for PWA compliance
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(registration => {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-        });
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
     }
-</script>
-
+  </script>
 </body>
 </html>
