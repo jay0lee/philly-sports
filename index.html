@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1e36">
+  <meta name="theme-color" content="#002d62">
   <title>Philly Sports</title>
   <link rel="manifest" href="manifest.json">
   <style>
@@ -14,266 +14,273 @@
     }
 
     :root {
-      --bg-dark: #0b1e36;
-      --card-bg: #0077c8;
-      --accent-text: #9bbcdb;
-      --white: #ffffff;
+      --bg: #002d62;
+      --card-bg: #ba0c2f;
+      --text-main: #ffffff;
+      --text-muted: #e0e8f5;
+      --accent: #ffd100;
     }
 
     html, body {
       width: 100vw;
       height: 100dvh;
       overflow: hidden;
-      background-color: var(--bg-dark);
+      background-color: var(--bg);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--white);
+      color: var(--text-main);
       user-select: none;
       -webkit-user-select: none;
     }
 
-    /* Container: Fills 100% viewport dynamically */
-    .app-container {
-      display: flex;
-      flex-direction: column;
-      height: 100dvh;
+    .display-stage {
+      position: relative;
       width: 100vw;
-      padding: clamp(6px, 1.8vh, 16px) clamp(10px, 2.5vw, 24px);
-      gap: clamp(6px, 1.5vh, 14px);
+      height: 100dvh;
+      overflow: hidden;
     }
 
-    /* Header Bar */
-    .header {
+    /* Screen Views */
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 3vh 4vw;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    }
+
+    .screen.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Screen 1: Big Clock & Weather */
+    #screen-clock {
+      justify-content: space-between;
+      padding: 4vh 6vw;
+    }
+
+    .time-giant {
+      font-size: clamp(5rem, 28vh, 18vw);
+      font-weight: 900;
+      line-height: 0.85;
+      letter-spacing: -2px;
+      text-align: center;
+    }
+
+    .date-giant {
+      font-size: clamp(1.8rem, 9vh, 6vw);
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-top: 1vh;
+      text-align: center;
+    }
+
+    .weather-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      flex: 0 0 auto;
+      align-items: baseline;
       width: 100%;
+      border-top: 2px solid rgba(255, 255, 255, 0.15);
+      padding-top: 2vh;
     }
 
-    .time-section, .weather-section {
-      display: flex;
-      flex-direction: column;
+    .temp-giant {
+      font-size: clamp(2.4rem, 11vh, 7vw);
+      font-weight: 900;
     }
 
-    .weather-section {
-      align-items: flex-end;
-    }
-
-    .time-display, .temp-display {
-      font-size: clamp(2rem, 7vh, 4rem);
-      font-weight: 800;
-      line-height: 0.95;
-      letter-spacing: -0.5px;
-    }
-
-    .date-display, .location-display {
-      font-size: clamp(0.75rem, 2.4vh, 1.25rem);
+    .location-label {
+      font-size: clamp(1.4rem, 6vh, 4vw);
       font-weight: 600;
-      color: var(--accent-text);
-      margin-top: clamp(2px, 0.5vh, 4px);
+      color: var(--text-muted);
     }
 
-    /* Cards Layout */
-    .cards-container {
-      display: flex;
-      flex: 1 1 0;
-      gap: clamp(6px, 1.5vh, 14px);
-      min-height: 0;
-      min-width: 0;
-      /* Default: Landscape / Desktop (Stacked rows) */
-      flex-direction: column;
-    }
-
-    .card {
-      background-color: var(--card-bg);
-      border-radius: clamp(8px, 2vh, 16px);
-      padding: clamp(6px, 1.5vh, 14px) clamp(10px, 2vw, 18px);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      align-items: center;
-      flex: 1 1 0;
-      min-height: 0;
-      min-width: 0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-    }
-
-    .card-label {
-      font-size: clamp(0.7rem, 2.2vh, 1.05rem);
-      font-weight: 800;
-      letter-spacing: 1px;
+    /* Screens 2 & 3: Dedicated Fullscreen Game Views */
+    .game-banner {
+      font-size: clamp(1.1rem, 5.5vh, 3.2vw);
+      font-weight: 900;
+      letter-spacing: 2px;
       text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2vh;
       text-align: center;
-      opacity: 0.95;
     }
 
-    .matchup-row {
+    .game-hero-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: clamp(8px, 2vw, 20px);
       width: 100%;
+      gap: clamp(12px, 4vw, 40px);
+      margin-bottom: 2vh;
     }
 
-    .team-code {
-      font-size: clamp(1.2rem, 4.5vh, 2.4rem);
+    .team-block {
+      display: flex;
+      align-items: center;
+      gap: clamp(8px, 2vw, 20px);
+    }
+
+    .team-code-giant {
+      font-size: clamp(2.8rem, 15vh, 10vw);
       font-weight: 900;
-      letter-spacing: 0.5px;
-      text-align: center;
-      flex: 0 0 auto;
     }
 
-    .team-logo {
-      width: clamp(34px, 7vh, 68px);
-      height: clamp(34px, 7vh, 68px);
-      background: var(--white);
+    .team-logo-giant {
+      width: clamp(52px, 14vh, 110px);
+      height: clamp(52px, 14vh, 110px);
+      background: #ffffff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 4px;
+      padding: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       flex-shrink: 0;
     }
 
-    .team-logo svg {
+    .team-logo-giant svg {
       width: 100%;
       height: 100%;
     }
 
-    .score-or-vs {
-      font-size: clamp(1.2rem, 4.5vh, 2.4rem);
+    .score-giant {
+      font-size: clamp(3rem, 16vh, 11vw);
       font-weight: 900;
-      padding: 0 clamp(4px, 1vw, 12px);
+      letter-spacing: 1px;
+      min-width: 120px;
       text-align: center;
-      flex: 0 0 auto;
     }
 
-    .game-details {
-      text-align: center;
-      font-size: clamp(0.75rem, 2.3vh, 1.15rem);
+    .meta-primary {
+      font-size: clamp(1.3rem, 6.5vh, 4.5vw);
       font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 95%;
-    }
-
-    .broadcast-info {
       text-align: center;
-      font-size: clamp(0.65rem, 1.9vh, 0.95rem);
-      color: #e0f0ff;
-      font-weight: 600;
+      color: var(--text-main);
+      margin-top: 1vh;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 95%;
     }
 
-    /* Portrait Optimization (Phones / Vertical Screens) */
+    .meta-secondary {
+      font-size: clamp(1.1rem, 5vh, 3.5vw);
+      font-weight: 600;
+      text-align: center;
+      color: var(--text-muted);
+      margin-top: 0.8vh;
+      white-space: nowrap;
+    }
+
+    /* Screen Transition Progress Bar */
+    .progress-bar-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 0.1s linear;
+    }
+
+    /* Portrait Optimization */
     @media (orientation: portrait) {
-      .app-container {
-        padding: clamp(12px, 3vw, 20px);
-        gap: clamp(10px, 2.5vw, 16px);
-      }
-
-      .cards-container {
+      .game-hero-row {
         flex-direction: column;
-        gap: clamp(10px, 2vw, 16px);
+        gap: 1.5vh;
       }
-
-      .time-display, .temp-display {
-        font-size: clamp(2.4rem, 10vw, 3.6rem);
-      }
-
-      .date-display, .location-display {
-        font-size: clamp(0.9rem, 3.8vw, 1.15rem);
-      }
-
-      .card-label {
-        font-size: clamp(0.8rem, 3.4vw, 1rem);
-      }
-
-      .team-code, .score-or-vs {
-        font-size: clamp(1.3rem, 5.5vw, 1.8rem);
-      }
-
-      .team-logo {
-        width: clamp(40px, 12vw, 56px);
-        height: clamp(40px, 12vw, 56px);
-      }
-
-      .game-details {
-        font-size: clamp(0.85rem, 3.6vw, 1.05rem);
-      }
-
-      .broadcast-info {
-        font-size: clamp(0.75rem, 3.2vw, 0.9rem);
+      .score-giant {
+        min-width: auto;
+        line-height: 1;
       }
     }
   </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- Header: Clock & Weather -->
-    <header class="header">
-      <div class="time-section">
-        <div class="time-display" id="clock">12:54</div>
-        <div class="date-display" id="date">Sun, Aug 23</div>
+  <div class="display-stage" onclick="nextScreen()">
+    <!-- 1. Big Clock / Weather View -->
+    <section class="screen active" id="screen-clock">
+      <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div class="time-giant" id="clock">12:54</div>
+        <div class="date-giant" id="date">Sun, Aug 23</div>
       </div>
-      <div class="weather-section">
-        <div class="temp-display" id="temp">74°</div>
-        <div class="location-display" id="location">Plainsboro, NJ</div>
+      <div class="weather-row">
+        <span class="location-label">Plainsboro, NJ</span>
+        <span class="temp-giant" id="temp">74°</span>
       </div>
-    </header>
+    </section>
 
-    <!-- Dynamic Game Cards -->
-    <main class="cards-container">
-      <!-- Most Recent Game Card -->
-      <section class="card" id="recent-game-card">
-        <div class="card-label">Most Recent Game</div>
-        <div class="matchup-row">
-          <span class="team-code">STL</span>
-          <div class="team-logo">
+    <!-- 2. Most Recent Game View -->
+    <section class="screen" id="screen-recent">
+      <div class="game-banner">Most Recent Game</div>
+      <div class="game-hero-row">
+        <div class="team-block">
+          <span class="team-code-giant">STL</span>
+          <div class="team-logo-giant">
             <svg viewBox="0 0 100 100">
-              <text x="50" y="72" font-size="70" font-family="'Arial Black', sans-serif" font-weight="900" text-anchor="middle" fill="#C41E3A">S</text>
+              <text x="50" y="74" font-size="70" font-family="'Arial Black', sans-serif" font-weight="900" text-anchor="middle" fill="#C41E3A">S</text>
             </svg>
           </div>
-          <span class="score-or-vs">6 - 7</span>
-          <div class="team-logo">
-            <svg viewBox="0 0 100 100">
-              <text x="50" y="74" font-size="72" font-family="'Georgia', serif" font-weight="bold" text-anchor="middle" fill="#E81828">P</text>
-            </svg>
-          </div>
-          <span class="team-code">PHI</span>
         </div>
-        <div class="game-details">Final • Fri, Aug 21, 6:40 PM</div>
-      </section>
+        <span class="score-giant">6 - 7</span>
+        <div class="team-block">
+          <div class="team-logo-giant">
+            <svg viewBox="0 0 100 100">
+              <text x="50" y="76" font-size="75" font-family="'Georgia', serif" font-weight="bold" text-anchor="middle" fill="#E81828">P</text>
+            </svg>
+          </div>
+          <span class="team-code-giant">PHI</span>
+        </div>
+      </div>
+      <div class="meta-primary">Final</div>
+      <div class="meta-secondary">Fri, Aug 21 • 6:40 PM</div>
+    </section>
 
-      <!-- Next Upcoming Game Card -->
-      <section class="card" id="upcoming-game-card">
-        <div class="card-label">Next Upcoming Game</div>
-        <div class="matchup-row">
-          <span class="team-code">STL</span>
-          <div class="team-logo">
+    <!-- 3. Next Upcoming Game View -->
+    <section class="screen" id="screen-upcoming">
+      <div class="game-banner">Next Upcoming Game</div>
+      <div class="game-hero-row">
+        <div class="team-block">
+          <span class="team-code-giant">STL</span>
+          <div class="team-logo-giant">
             <svg viewBox="0 0 100 100">
-              <text x="50" y="72" font-size="70" font-family="'Arial Black', sans-serif" font-weight="900" text-anchor="middle" fill="#C41E3A">S</text>
+              <text x="50" y="74" font-size="70" font-family="'Arial Black', sans-serif" font-weight="900" text-anchor="middle" fill="#C41E3A">S</text>
             </svg>
           </div>
-          <span class="score-or-vs">@</span>
-          <div class="team-logo">
-            <svg viewBox="0 0 100 100">
-              <text x="50" y="74" font-size="72" font-family="'Georgia', serif" font-weight="bold" text-anchor="middle" fill="#E81828">P</text>
-            </svg>
-          </div>
-          <span class="team-code">PHI</span>
         </div>
-        <div class="game-details">Sat, Aug 22, 6:05 PM</div>
-        <div class="broadcast-info">📺 Watch on: MLB.TV, Cardinals.TV, ERADM</div>
-      </section>
-    </main>
+        <span class="score-giant">@</span>
+        <div class="team-block">
+          <div class="team-logo-giant">
+            <svg viewBox="0 0 100 100">
+              <text x="50" y="76" font-size="75" font-family="'Georgia', serif" font-weight="bold" text-anchor="middle" fill="#E81828">P</text>
+            </svg>
+          </div>
+          <span class="team-code-giant">PHI</span>
+        </div>
+      </div>
+      <div class="meta-primary">Sat, Aug 22 • 6:05 PM</div>
+      <div class="meta-secondary">📺 MLB.TV, Cardinals.TV, ERADM</div>
+    </section>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progress"></div>
+    </div>
   </div>
 
   <script>
+    // Live Clock
     function updateClock() {
       const now = new Date();
       let hours = now.getHours();
@@ -285,10 +292,45 @@
       const options = { weekday: 'short', month: 'short', day: 'numeric' };
       document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
     }
-
     setInterval(updateClock, 1000);
     updateClock();
 
+    // Display Carousel
+    const screens = [
+      document.getElementById('screen-clock'),
+      document.getElementById('screen-recent'),
+      document.getElementById('screen-upcoming')
+    ];
+    let currentIndex = 0;
+    const ROTATE_INTERVAL_MS = 8000;
+    let startTime = Date.now();
+
+    function showScreen(index) {
+      screens.forEach((screen, idx) => {
+        screen.classList.toggle('active', idx === index);
+      });
+      currentIndex = index;
+      startTime = Date.now();
+    }
+
+    function nextScreen() {
+      showScreen((currentIndex + 1) % screens.length);
+    }
+
+    // Auto-advance loop with smooth bottom progress indicator
+    function loop() {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min((elapsed / ROTATE_INTERVAL_MS) * 100, 100);
+      document.getElementById('progress').style.width = `${progress}%`;
+
+      if (elapsed >= ROTATE_INTERVAL_MS) {
+        nextScreen();
+      }
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+
+    // PWA Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(() => {});
