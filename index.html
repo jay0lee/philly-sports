@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#004c97">
-  <title>Philly Sports Clock</title>
+  <meta name="theme-color" content="#0b1e36">
+  <title>Philly Sports</title>
   <link rel="manifest" href="manifest.json">
   <style>
     *, *::before, *::after {
@@ -29,7 +29,7 @@
       flex-direction: column;
       height: 100vh;
       width: 100vw;
-      padding: 6px 12px;
+      padding: 10px 18px 12px 18px;
       justify-content: space-between;
     }
 
@@ -37,125 +37,130 @@
     .header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       flex: 0 0 auto;
-      padding: 0 4px;
+      padding: 0 4px 6px 4px;
     }
 
     .time-section {
       display: flex;
       flex-direction: column;
+      justify-content: center;
     }
 
     .time-display {
-      font-size: 2.2rem;
+      font-size: 3.4rem;
       font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.5px;
+      line-height: 0.95;
+      letter-spacing: -1px;
     }
 
     .date-display {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #a0c4e8;
-      margin-top: 2px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #9bbcdb;
+      margin-top: 4px;
     }
 
     .weather-section {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
+      justify-content: center;
     }
 
     .temp-display {
-      font-size: 2.2rem;
+      font-size: 3.4rem;
       font-weight: 800;
-      line-height: 1;
+      line-height: 0.95;
+      letter-spacing: -1px;
     }
 
     .location-display {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #a0c4e8;
-      margin-top: 2px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #9bbcdb;
+      margin-top: 4px;
     }
 
-    /* Main Cards Area */
+    /* Cards Layout */
     .cards-container {
       display: flex;
       flex-direction: column;
       flex: 1 1 auto;
-      gap: 6px;
-      margin-top: 6px;
+      gap: 10px;
       min-height: 0;
     }
 
     .card {
-      background-color: #005aa7;
-      border-radius: 8px;
-      padding: 6px 10px;
+      background-color: #0077c8;
+      border-radius: 12px;
+      padding: 8px 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
+      align-items: center;
       flex: 1 1 0;
       min-height: 0;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
     .card-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.8px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
       text-align: center;
-      color: #d0e4ff;
+      color: #ffffff;
+      opacity: 0.95;
     }
 
     .matchup-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 12px;
+      width: 100%;
     }
 
     .team-code {
-      font-size: 1.15rem;
-      font-weight: 800;
+      font-size: 1.6rem;
+      font-weight: 900;
       letter-spacing: 0.5px;
-      width: 44px;
+      width: 65px;
       text-align: center;
     }
 
     .team-logo {
-      width: 32px;
-      height: 32px;
+      width: 44px;
+      height: 44px;
       background: #ffffff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2px;
+      padding: 4px;
+      flex-shrink: 0;
     }
 
-    .team-logo img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
+    .team-logo svg {
+      width: 100%;
+      height: 100%;
     }
 
     .score-or-vs {
-      font-size: 1.2rem;
-      font-weight: 800;
-      padding: 0 4px;
-      min-width: 50px;
+      font-size: 1.6rem;
+      font-weight: 900;
+      padding: 0 8px;
+      min-width: 70px;
       text-align: center;
     }
 
     .game-details {
       text-align: center;
-      font-size: 0.75rem;
-      color: #e0eaff;
-      font-weight: 500;
+      font-size: 1rem;
+      color: #ffffff;
+      font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -163,8 +168,9 @@
 
     .broadcast-info {
       text-align: center;
-      font-size: 0.65rem;
-      color: #c0d8f8;
+      font-size: 0.85rem;
+      color: #e0f0ff;
+      font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -176,11 +182,11 @@
     <!-- Header: Clock & Weather -->
     <header class="header">
       <div class="time-section">
-        <div class="time-display" id="clock">--:--</div>
-        <div class="date-display" id="date">---, --- --</div>
+        <div class="time-display" id="clock">12:54</div>
+        <div class="date-display" id="date">Sun, Aug 23</div>
       </div>
       <div class="weather-section">
-        <div class="temp-display" id="temp">--°</div>
+        <div class="temp-display" id="temp">74°</div>
         <div class="location-display" id="location">Plainsboro, NJ</div>
       </div>
     </header>
@@ -191,41 +197,53 @@
       <section class="card" id="recent-game-card">
         <div class="card-label">Most Recent Game</div>
         <div class="matchup-row">
-          <span class="team-code" id="recent-away-abbr">STL</span>
+          <span class="team-code">STL</span>
           <div class="team-logo">
-            <img id="recent-away-logo" src="" alt="Away">
+            <!-- STL Inline Vector -->
+            <svg viewBox="0 0 100 100">
+              <text x="50" y="72" font-size="70" font-family="'Arial Black', sans-serif" font-weight="900" text-anchor="middle" fill="#C41E3A">S</text>
+            </svg>
           </div>
-          <span class="score-or-vs" id="recent-score">6 - 7</span>
+          <span class="score-or-vs">6 - 7</span>
           <div class="team-logo">
-            <img id="recent-home-logo" src="" alt="Home">
+            <!-- PHI Inline Vector -->
+            <svg viewBox="0 0 100 100">
+              <text x="50" y="74" font-size="72" font-family="'Georgia', serif" font-weight="bold" text-anchor="middle" fill="#E81828">P</text>
+            </svg>
           </div>
-          <span class="team-code" id="recent-home-abbr">PHI</span>
+          <span class="team-code">PHI</span>
         </div>
-        <div class="game-details" id="recent-game-status">Final • Fri, Aug 21</div>
+        <div class="game-details">Final • Fri, Aug 21, 6:40 PM</div>
       </section>
 
       <!-- Next Upcoming Game Card -->
       <section class="card" id="upcoming-game-card">
         <div class="card-label">Next Upcoming Game</div>
         <div class="matchup-row">
-          <span class="team-code" id="next-away-abbr">STL</span>
+          <span class="team-code">STL</span>
           <div class="team-logo">
-            <img id="next-away-logo" src="" alt="Away">
+            <!-- STL Inline Vector -->
+            <svg viewBox="0 0 100 100">
+              <text x="50" y="72" font-size="70" font-family="'Arial Black', sans-serif" font-weight="900" text-anchor="middle" fill="#C41E3A">S</text>
+            </svg>
           </div>
           <span class="score-or-vs">@</span>
           <div class="team-logo">
-            <img id="next-home-logo" src="" alt="Home">
+            <!-- PHI Inline Vector -->
+            <svg viewBox="0 0 100 100">
+              <text x="50" y="74" font-size="72" font-family="'Georgia', serif" font-weight="bold" text-anchor="middle" fill="#E81828">P</text>
+            </svg>
           </div>
-          <span class="team-code" id="next-home-abbr">PHI</span>
+          <span class="team-code">PHI</span>
         </div>
-        <div class="game-details" id="next-game-time">Sat, Aug 22, 6:05 PM</div>
-        <div class="broadcast-info" id="next-game-broadcast">📺 Watch on: MLB.TV, NBCSP</div>
+        <div class="game-details">Sat, Aug 22, 6:05 PM</div>
+        <div class="broadcast-info">📺 Watch on: MLB.TV, Cardinals.TV, ERADM</div>
       </section>
     </main>
   </div>
 
   <script>
-    // Clock Updater
+    // Live Clock Updater
     function updateClock() {
       const now = new Date();
       let hours = now.getHours();
@@ -241,7 +259,7 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Register Service Worker for PWA compliance
+    // Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(() => {});
